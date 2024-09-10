@@ -7,11 +7,12 @@ class ApiController {
   final String apiUrl = 'https://tometohub.com/api/login';
 
   // Login Function
-   Future<Map<String, dynamic>> login(String email, String password) async {
+   Future<Map<String, dynamic>> login(String email, String password, String macAddress) async {
     // Data to send in POST request
     final Map<String, dynamic> data = {
       'email': email,
       'password': password,
+      'mac_address': macAddress
     };
 
     // Sending the POST request

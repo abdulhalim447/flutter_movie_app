@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:tometo_hub/screens/category_screen.dart';
-
+import 'package:network_info_plus/network_info_plus.dart';
 import '../utils/components.dart';
 import '../utils/snake_message.dart';
 import '../utils/api_controller.dart';
@@ -22,13 +22,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final ApiController apiController = ApiController();
 
-
+  final info = NetworkInfo();
+  String? macAddress = await info.getWifiBSSID();
   // Login function to call the API
   void _loginAUTH() async {
     try {
       final result = await apiController.login(
         _emailController.text,
         _passwordController.text,
+         macAddress!,
       );
       // Navigate to another page if login is successful
       if(mounted) {
