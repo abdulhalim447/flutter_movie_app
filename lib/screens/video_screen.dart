@@ -42,9 +42,14 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green.shade100,
       appBar: AppBar(
         foregroundColor: Colors.white,
         title: const Text('Videos List'),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text('Tometo Hub', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        ),
         backgroundColor: Colors.blueAccent,
         actions: [
           RemainingDate(futureDate: futureDate),
@@ -93,22 +98,26 @@ class _VideoScreenState extends State<VideoScreen> {
                             ),
                           );
                         },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.network(
-                              video.thumbnail,
-                              fit: BoxFit.cover,      // Ensure the image fits within the grid item
-                              height: constraints.maxWidth / crossAxisCount * 0.75, // Adjust the image height for responsiveness
-                            ),
-                            const SizedBox(height: 8.0),
-                            Center(
-                              child: Text(
-                                video.name,
-                                style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                        child: Card(
+                          elevation: 4.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                video.thumbnail,
+                                fit: BoxFit.cover,      // Ensure the image fits within the grid item
+                                height: constraints.maxWidth / crossAxisCount * 0.75, // Adjust the image height for responsiveness
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 8.0),
+                              Center(
+                                child: Text(
+                                  video.name,
+                                  style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

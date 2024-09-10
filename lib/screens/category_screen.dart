@@ -41,8 +41,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green.shade100,
       appBar: AppBar(
         foregroundColor: Colors.white,
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text('Tometo Hub', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        ),
         title: const Text('Categories'),
         backgroundColor: Colors.blueAccent,
         actions: [
@@ -53,35 +58,59 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Category>>(
-        future: categories,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No categories found.'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Category category = snapshot.data![index];
-                return ListTile(
-                  title: Text(category.name),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VideoScreen(category: category),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            categories = apiService.fetchCategories();
+          });
         },
+        child: FutureBuilder<List<Category>>(
+          future: categories,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No categories found.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Category category = snapshot.data![index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10.0, left: 10.0,top: 10.0),
+                    child: Card(
+                      elevation: 2.0,
+                      color: Colors.green,
+                      child: ListTile(
+                        leading: const Icon(Icons.image,
+                            color: Colors.yellow, size: 40),
+                        trailing: const Icon(Icons.chevron_right,size: 60,color: Colors.redAccent,),
+                        title: Text(
+                          category.name,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  VideoScreen(category: category),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

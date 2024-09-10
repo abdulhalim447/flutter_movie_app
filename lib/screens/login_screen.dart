@@ -21,29 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final ApiController apiController = ApiController();
-
-  final info = NetworkInfo();
-  String? macAddress = await info.getWifiBSSID();
+  bool isLoading = false;
   // Login function to call the API
-  void _loginAUTH() async {
-    try {
-      final result = await apiController.login(
-        _emailController.text,
-        _passwordController.text,
-         macAddress!,
-      );
-      // Navigate to another page if login is successful
-      if(mounted) {
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) => CategoryScreen()), (
-                Route<dynamic> route) => false);
-        showSnakMessage(context, "Login Successful");
-      } } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Login failed: ${e.toString()}'),
-      ));
-    }
-  }
 
 
   @override
@@ -104,14 +83,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20,),
                   Container(
-                    child: ElevatedButton(
-                      style: AppButtonStyle(),
-                      child: SuccessButtonChild("Login"),
-                      onPressed: (){
-                        if(formKey.currentState!.validate()){
-                          _loginAUTH();
-                        }
-                      },
+                    child: Visibility(
+                      visible: !isLoading,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: ElevatedButton(
+                        style: AppButtonStyle(),
+                        child: SuccessButtonChild("Login"),
+                        onPressed: (){
+                          if(formKey.currentState!.validate()){
+                            _loginAUTH();
+                          }
+                        },
+                      ),
                     ),
                   )
                 ],
@@ -121,5 +106,42 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+  void _loginAUTH() async {
+    isLoading = true;
+    if (mounted) {
+      setState(() {});
+    }
+    final info = NetworkInfo();
+    final macAddress = await info.getWifiBSSID();
+    try {
+      final result = await apiController.login(
+        _emailController.text,
+        _passwordController.text,
+        macAddress!,
+      );
+      // Navigate to another page if login is successful
+      if(mounted) {
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => CategoryScreen()), (
+                Route<dynamic> route) => false);
+        showSnakMessage(context, "Login Successful");
+      } } catch (e) {
+      if(mounted) {
+        showSnakMessage(context,e.toString() ?? "Login Failed");
+        isLoading = false;
+        setState(() {});
+      }
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text('Login failed: ${e.toString()}'),
+      // ));
+    }
+  }
+
+  @override
+  dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

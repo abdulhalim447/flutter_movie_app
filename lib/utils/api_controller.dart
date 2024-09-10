@@ -30,9 +30,15 @@ class ApiController {
       // Save token locally using shared_preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', responseData['token']);
-
       return responseData;
-    } else {
+    } else if (response.statusCode == 401) {
+      throw Exception('Invalid credentials');
+    }else if (response.statusCode == 404) {
+      throw Exception('User does not exist');
+    }else if (response.statusCode == 403) {
+      throw Exception('You are already logged in from another device');
+    }
+    else {
       throw Exception('Failed to log in');
     }
   }
