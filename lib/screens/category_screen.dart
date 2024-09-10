@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tometo_hub/screens/login_screen.dart';
+import 'package:tometo_hub/utils/api_controller.dart';
 import '../models/category.dart';
+import '../models/remaining_date.dart';
 import '../services/api_service.dart';
+import '../utils/remaining_date.dart';
 import 'video_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -11,17 +16,43 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   final ApiService apiService = ApiService();
   late Future<List<Category>> categories;
+  late Future<GetDate?> futureDate;
 
   @override
   void initState() {
     super.initState();
     categories = apiService.fetchCategories();
+    futureDate = ApiService().fetchDate();
+  }
+
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+          (route) => false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Categories')),
+      appBar: AppBar(
+        foregroundColor: Colors.white,
+        title: const Text('Categories'),
+        backgroundColor: Colors.blueAccent,
+        actions: [
+          RemainingDate(futureDate: futureDate),
+          IconButton(
+            onPressed: _logout,
+            icon: const Icon(Icons.logout, color: Colors.red),
+          ),
+        ],
+      ),
       body: FutureBuilder<List<Category>>(
         future: categories,
         builder: (context, snapshot) {

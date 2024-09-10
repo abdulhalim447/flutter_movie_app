@@ -29,7 +29,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: WebViewWidget(controller: _controller),
+      body: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: WebViewWidget(controller: _controller),
+      ),
     );
   }
 }
