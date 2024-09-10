@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:mac_address/mac_address.dart';
 import 'package:tometo_hub/screens/category_screen.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import '../utils/components.dart';
@@ -113,12 +114,14 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {});
     }
     final info = NetworkInfo();
+    String? macAddressTwo;
+    macAddressTwo = await GetMac.macAddress;
     final macAddress = await info.getWifiBSSID();
     try {
       final result = await apiController.login(
         _emailController.text,
         _passwordController.text,
-        macAddress!,
+        macAddressTwo,
       );
       // Navigate to another page if login is successful
       if(mounted) {
