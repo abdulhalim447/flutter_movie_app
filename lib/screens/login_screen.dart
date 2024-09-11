@@ -1,7 +1,7 @@
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:tometo_hub/screens/category_screen.dart';
-import 'package:uuid/uuid.dart';
 import '../utils/components.dart';
 import '../utils/snake_message.dart';
 import '../utils/api_controller.dart';
@@ -111,14 +111,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (mounted) {
       setState(() {});
     }
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    String serialNumber = androidInfo.id;
 
-    var uuid = const Uuid();
-    String deviceUUID = uuid.v4();
     try {
       final result = await apiController.login(
         _emailController.text,
         _passwordController.text,
-         deviceUUID ,
+        serialNumber ,
       );
       // Navigate to another page if login is successful
       if(mounted) {
