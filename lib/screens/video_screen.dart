@@ -93,7 +93,7 @@ class _VideoScreenState extends State<VideoScreen> {
                             MaterialPageRoute(
                               builder: (context) => WebViewScreen(
                                 url: video.url,
-                                title: video.name,
+                                //title: video.name,
                               ),
                             ),
                           );
