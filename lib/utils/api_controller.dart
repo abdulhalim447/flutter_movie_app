@@ -7,7 +7,7 @@ class ApiController {
   final String apiUrl = 'https://tometohub.com/api/login';
 
   // Login Function
-   Future<Map<String, dynamic>> login(String email, String password, String macAddress) async {
+  Future<Map<String, dynamic>> login(String email, String password, String macAddress) async {
     // Data to send in POST request
     final Map<String, dynamic> data = {
       'email': email,
@@ -30,15 +30,15 @@ class ApiController {
       // Save token locally using shared_preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', responseData['token']);
+      await prefs.setBool('isLoggedIn', true); // Save login status
       return responseData;
     } else if (response.statusCode == 401) {
       throw Exception('Invalid credentials');
-    }else if (response.statusCode == 404) {
+    } else if (response.statusCode == 404) {
       throw Exception('User does not exist');
-    }else if (response.statusCode == 403) {
+    } else if (response.statusCode == 403) {
       throw Exception('You are already logged in from another device');
-    }
-    else {
+    } else {
       throw Exception('Failed to log in');
     }
   }
@@ -53,5 +53,20 @@ class ApiController {
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
+    await prefs.setBool('isLoggedIn', false); // Reset login status
+  }
+
+  // Check login status
+  Future<bool> checkLoginStatus(String serialNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (token != null && isLoggedIn) {
+      // You can add an additional API call to verify the token if needed.
+      return true;
+    } else {
+      return false;
+    }
   }
 }

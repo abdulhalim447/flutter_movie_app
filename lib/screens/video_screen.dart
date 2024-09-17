@@ -21,36 +21,39 @@ class _VideoScreenState extends State<VideoScreen> {
   final ApiService apiService = ApiService();
   late Future<List<Video>> videos;
   late Future<GetDate?> futureDate;
+
   @override
   void initState() {
     super.initState();
     videos = apiService.fetchVideosByCategory(widget.category.id.toString());
     futureDate = ApiService().fetchDate();
   }
+
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     if (mounted) {
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
-              (route) => false);
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+            (route) => false,
+      );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: const Text('Videos List'),
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text('Tometo Hub', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: const Text(
+          'Movies',
+          style: TextStyle(fontSize: 18), // App bar এর ফন্ট সাইজ কমানো
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.transparent,
         actions: [
           RemainingDate(futureDate: futureDate),
           IconButton(
@@ -71,17 +74,17 @@ class _VideoScreenState extends State<VideoScreen> {
           } else {
             return LayoutBuilder(
               builder: (context, constraints) {
-                // Calculate the number of items in a row based on the screen width
-                int crossAxisCount = (constraints.maxWidth / 150).floor(); // Adjust 150 as the desired width per item
+                int crossAxisCount =
+                (constraints.maxWidth / 125).floor(); // Adjust 150 as the desired width per item
 
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount, // Use calculated value
-                      crossAxisSpacing: 8.0,          // Space between grid items horizontally
-                      mainAxisSpacing: 8.0,           // Space between grid items vertically
-                      childAspectRatio: 0.75,         // Adjust this to control the size of the grid items
+                      crossAxisSpacing: 8.0, // Space between grid items horizontally
+                      mainAxisSpacing: 8.0, // Space between grid items vertically
+                      childAspectRatio: 0.75, // Adjust this to control the size of the grid items
                     ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
@@ -93,30 +96,48 @@ class _VideoScreenState extends State<VideoScreen> {
                             MaterialPageRoute(
                               builder: (context) => WebViewScreen(
                                 url: video.url,
-                                //title: video.name,
+                                title: video.name,
                               ),
                             ),
                           );
                         },
                         child: Card(
-                          elevation: 4.0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.network(
-                                video.thumbnail,
-                                fit: BoxFit.cover,      // Ensure the image fits within the grid item
-                                height: constraints.maxWidth / crossAxisCount * 0.75, // Adjust the image height for responsiveness
-                              ),
-                              const SizedBox(height: 8.0),
-                              Center(
-                                child: Text(
-                                  video.name,
-                                  style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                          elevation: 5.0,
+                          // Elevation দিয়ে কার্ডটি উঁচু করা হয়েছে
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // কর্নার রেডিয়াস ১২ পিক্সেল দেওয়া হয়েছে
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12), // ফটোতেও একই রেডিয়াস দেওয়া হয়েছে
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Image.network(
+                                    video.thumbnail,
+                                    fit: BoxFit.cover,
+                                    // ফটোটা পুরো কার্ডের মধ্যে জুড়ে বসানোর জন্য
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.5), // ছবির নিচে কালো ব্যাকগ্রাউন্ড
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      video.name,
+                                      style: const TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );

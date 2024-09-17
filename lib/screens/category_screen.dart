@@ -41,15 +41,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         foregroundColor: Colors.white,
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text('Tometo Hub', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-        ),
         title: const Text('Categories'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.transparent,
         actions: [
           RemainingDate(futureDate: futureDate),
           IconButton(
@@ -82,11 +78,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     padding: const EdgeInsets.only(right: 10.0, left: 10.0,top: 10.0),
                     child: Card(
                       elevation: 2.0,
-                      color: Colors.green,
+                      color: Colors.grey,
                       child: ListTile(
                         leading: const Icon(Icons.image,
                             color: Colors.yellow, size: 40),
-                        trailing: const Icon(Icons.chevron_right,size: 60,color: Colors.redAccent,),
+                        trailing: const Icon(Icons.chevron_right,size: 60,color: Colors.white,),
                         title: Text(
                           category.name,
                           style: const TextStyle(
