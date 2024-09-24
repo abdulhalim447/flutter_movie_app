@@ -94,9 +94,10 @@ class _VideoScreenState extends State<VideoScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WebViewScreen(
-                                url: video.url,
-                                title: video.name,
+                              builder: (context) => WebViewExample (
+                                 // initialUrl: video.url,
+                               /* url: video.url,
+                                title: video.name,*/
                               ),
                             ),
                           );

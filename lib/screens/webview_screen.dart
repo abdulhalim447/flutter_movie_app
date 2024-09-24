@@ -1,62 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:url_launcher/url_launcher.dart';  // To handle external intents
 
-class WebViewScreen extends StatefulWidget {
-  final String url;
-  final String title;
-
-  const WebViewScreen({Key? key, required this.url, required this.title}) : super(key: key);
-
+class WebViewExample extends StatefulWidget {
   @override
-  State<WebViewScreen> createState() => _WebViewScreenState();
+  _WebViewExampleState createState() => _WebViewExampleState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
+class _WebViewExampleState extends State<WebViewExample> {
   InAppWebViewController? webViewController;
+
+  // List of ad hostnames to block
+  final List<String> adHosts = [
+    'doubleclick.net',
+    'googleadservices.com',
+    'googlesyndication.com',
+    'google-analytics.com',
+    'ads.yahoo.com',
+    'adserver.yahoo.com',
+    'ads.microsoft.com',
+    // Add more ad domains as needed
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        title: Text('Ad-Blocking WebView'),
       ),
       body: InAppWebView(
-        initialUrlRequest: URLRequest(url: WebUri(widget.url)),
-        onLoadStart: (controller, url) async {
-          // Check if the URL starts with intent://
-          if (url != null && url.toString().startsWith('intent://')) {
-            try {
-              String fallbackUrl = url.toString().replaceFirst('intent://', 'https://');
-
-              // Try to open the fallback URL in the browser
-              if (await canLaunch(fallbackUrl)) {
-                await launch(fallbackUrl);
-              } else {
-                // If no fallback is available, show an error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Could not open the intent URL.')),
-                );
-              }
-            } catch (e) {
-              print('Error handling intent URL: $e');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to handle intent URL.')),
-              );
-            }
-            return; // Stop WebView from trying to load the intent URL
-          }
+        initialUrlRequest: URLRequest(url: Uri.parse('https://prmovies.my')),
+        onWebViewCreated: (controller) {
+          webViewController = controller;
         },
-        onLoadError: (controller, url, code, message) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error loading page: $message')),
-          );
+        // Intercept requests and block ads using shouldOverrideUrlLoading
+        shouldOverrideUrlLoading: (controller, navigationAction) async {
+          Uri? url = navigationAction.request.url;
+          if (url != null) {
+            for (String host in adHosts) {
+              if (url.host.contains(host)) {
+                // Block the request by canceling the navigation
+                return NavigationActionPolicy.CANCEL;
+              }
+            }
+          }
+          // Allow the request to proceed
+          return NavigationActionPolicy.ALLOW;
         },
       ),
     );
