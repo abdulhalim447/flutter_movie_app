@@ -44,8 +44,39 @@ class _CategoryScreenState extends State<CategoryScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: const Text('Categories'),
+        toolbarHeight: 100,
+        elevation: 3,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            radius: 50,
+            child: Image.asset(
+              'assets/images/tometo.png', // Replace with your logo path
+              height: 500,
+              width: 500,
+            ),
+          ),
+        ),
+        title: GestureDetector(
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'TomatoHub',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Category',
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
         backgroundColor: Colors.transparent,
+
         actions: [
           RemainingDate(futureDate: futureDate),
           IconButton(
@@ -75,14 +106,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 itemBuilder: (context, index) {
                   Category category = snapshot.data![index];
                   return Padding(
-                    padding: const EdgeInsets.only(right: 10.0, left: 10.0,top: 10.0),
+                    padding: const EdgeInsets.only(
+                        right: 10.0, left: 10.0, top: 10.0),
                     child: Card(
                       elevation: 2.0,
                       color: Colors.grey,
                       child: ListTile(
                         leading: const Icon(Icons.image,
                             color: Colors.yellow, size: 40),
-                        trailing: const Icon(Icons.chevron_right,size: 60,color: Colors.white,),
+                        trailing: const Icon(
+                          Icons.chevron_right,
+                          size: 60,
+                          color: Colors.white,
+                        ),
                         title: Text(
                           category.name,
                           style: const TextStyle(

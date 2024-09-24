@@ -8,7 +8,7 @@ import '../models/video.dart';
 import '../utils/api_controller.dart';
 
 class ApiService {
-  final String apiUrl = "https://tometohub.com/api/video/link";
+  final String apiUrl = "https://tomato.yozilive.xyz/api/video/link";
 
   Future<Map<String, dynamic>> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

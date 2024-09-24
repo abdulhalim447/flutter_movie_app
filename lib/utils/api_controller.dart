@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiController {
   // API URL
-  final String apiUrl = 'https://tometohub.com/api/login';
+  final String apiUrl = 'https://tomato.yozilive.xyz/api/login';
 
   // Login Function
   Future<Map<String, dynamic>> login(String email, String password, String macAddress) async {
@@ -39,7 +39,7 @@ class ApiController {
     } else if (response.statusCode == 403) {
       throw Exception('You are already logged in from another device');
     } else {
-      throw Exception('Failed to log in');
+      throw Exception(response.statusCode.toString());
     }
   }
 

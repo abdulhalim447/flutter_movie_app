@@ -11,7 +11,7 @@
 
 
     <application
-        android:label="tometo_hub"
+        android:label="TomatoHub"
         android:name="${applicationName}"
         android:usesCleartextTraffic="false"
         android:hardwareAccelerated="false"

@@ -49,11 +49,39 @@ class _VideoScreenState extends State<VideoScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         foregroundColor: Colors.white,
-        title: const Text(
-          'Movies',
-          style: TextStyle(fontSize: 18), // App bar এর ফন্ট সাইজ কমানো
+        toolbarHeight: 100,
+        elevation: 3,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            radius: 50,
+            child: Image.asset(
+              'assets/images/tometo.png', // Replace with your logo path
+              height: 500,
+              width: 500,
+            ),
+          ),
+        ),
+        title: GestureDetector(
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'TomatoHub',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Videos Links',
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
+          ),
         ),
         backgroundColor: Colors.transparent,
+
         actions: [
           RemainingDate(futureDate: futureDate),
           IconButton(
@@ -94,10 +122,10 @@ class _VideoScreenState extends State<VideoScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WebViewExample (
+                              builder: (context) => WebViewScreen (
                                  // initialUrl: video.url,
-                               /* url: video.url,
-                                title: video.name,*/
+                                url: video.url,
+                                title: video.name,
                               ),
                             ),
                           );
