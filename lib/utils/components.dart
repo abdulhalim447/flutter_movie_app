@@ -47,17 +47,20 @@ TextStyle Head9Text(textColor) {
 
 InputDecoration AppInputDecoration(label) {
   return InputDecoration(
+
       focusedBorder: const OutlineInputBorder(
         borderSide: const BorderSide(color: colorGreen, width: 1),
       ),
-      fillColor: colorWhite,
+      fillColor: Colors.black54,
       filled: true,
       contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 20),
       enabledBorder: const OutlineInputBorder(
         borderSide: const BorderSide(color: colorWhite, width: 0.0),
       ),
       border: OutlineInputBorder(),
-      labelText: label);
+      labelText: label,
+      labelStyle: TextStyle(color: Colors.green,fontWeight: FontWeight.bold,fontSize: 20)
+  );
 }
 
 DecoratedBox AppDropDownStyle(child) {

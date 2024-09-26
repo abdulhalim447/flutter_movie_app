@@ -52,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    style: TextStyle(color: Colors.white),
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -67,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 20,
                   ),
                   TextFormField(
+                    style: TextStyle(color: Colors.white),
                     controller: _passwordController,
                     decoration: AppInputDecoration("Password"),
                     obscureText: true,
