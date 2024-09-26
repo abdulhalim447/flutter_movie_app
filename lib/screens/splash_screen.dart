@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // For storing first launch info
 import 'package:tometo_hub/screens/category_screen.dart';
-import '../utils/components.dart';
+import '../dns_filter/dns_filter.dart';
 import '../utils/snake_message.dart';
 import '../utils/api_controller.dart';
-import 'login_screen.dart'; // Login Screen import
+import 'login_screen.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,17 +24,33 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _checkFirstLaunch(); // Check if first launch
+  }
+
+  // Check if the user is launching the app for the first time
+  Future<void> _checkFirstLaunch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch = prefs.getBool('firstLaunch') ?? true;
+
+    if (isFirstLaunch) {
+      // Navigate to DNS tutorial page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DnsTutorialPage()),
+      );
+      // Set first launch to false after showing the DNS tutorial
+      await prefs.setBool('firstLaunch', false);
+    } else {
+      _checkLoginStatus(); // Continue with login check if not first launch
+    }
   }
 
   void _checkLoginStatus() async {
-    // Fetch device info for authentication (same as in login)
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     String serialNumber = androidInfo.id;
 
     try {
-      // Check if the user is already logged in via the API
       final result = await apiController.checkLoginStatus(serialNumber);
       if (result) {
         _isLoggedIn = true;
