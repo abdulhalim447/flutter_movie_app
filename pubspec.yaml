@@ -41,6 +41,10 @@ dependencies:
   fluttertoast: ^8.2.8
   url_launcher: ^6.1.7
   webview_flutter: ^4.0.0
+  stepview: ^0.0.3
+  android_intent_plus: ^5.1.0
+
+
 
 
 
